@@ -1,4 +1,4 @@
-from flask import Flask, render_template, json, request
+from flask import Flask, render_template, json, request, redirect
 from flaskext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 
@@ -65,7 +65,7 @@ def validateLogin():
     data = cursor.fetchall()
 
     if len(data) > 0:
-      if check_password_hash(str(data[0][3]), _password)
+      if check_password_hash(str(data[0][3]),_password):
         return redirect('/userHome')
       else:
         return render_template('error.html', error='Wrong email address or password.')
@@ -78,6 +78,9 @@ def validateLogin():
     cursor.close()
     con.close()
 
+@app.route('/userHome')
+def userHome():
+  return render_template('userHome.html')
 
 
 if __name__ == "__main__":
