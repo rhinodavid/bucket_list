@@ -96,7 +96,29 @@ def logout():
 def showAddWish():
   return render_template('addWish.html')
 
+@app.route('/addWish',methods=['POST'])
+def addWish():
+  try:
+    _user_id = session.get('user')
+    _wish_title = request.form['inputTitle']
+    _wish_description = request.form['inputDescription']
 
+    conn = mysql.connect()
+    cursor = conn.cursor()
+
+    if _user_id and _wish_title and _wish_description:
+      cursor.callproc('sp_addWish',(_wish_title,_wish_description,_user_id))
+      data = cursor.fetchall()
+      if len(data) is 0:
+        conn.commit()
+        return redirect('/userHome')
+      else:
+        return render_template('error.html',error = "There was a problem adding the wish")
+  except Exception as e:
+    return render_template('error.html',error = str(e))
+  finally:
+    cursor.close()
+    conn.close()
 
 
 if __name__ == "__main__":
