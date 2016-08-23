@@ -1,8 +1,9 @@
-from flask import Flask, render_template, json, request, redirect
+from flask import Flask, render_template, json, request, redirect, session
 from flaskext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+app.secret_key = 'P)99(uvtehdG7AZj{q3['
 
 mysql = MySQL()
 
@@ -66,6 +67,7 @@ def validateLogin():
 
     if len(data) > 0:
       if check_password_hash(str(data[0][3]),_password):
+        session['user'] = data[0][0]
         return redirect('/userHome')
       else:
         return render_template('error.html', error='Wrong email address or password.')
@@ -80,7 +82,10 @@ def validateLogin():
 
 @app.route('/userHome')
 def userHome():
-  return render_template('userHome.html')
+  if session.get('user'):
+    return render_template('userHome.html')
+  else:
+    return render_template('error.html',error = 'Unauthorized Access')
 
 
 if __name__ == "__main__":
