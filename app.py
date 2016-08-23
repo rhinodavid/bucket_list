@@ -10,7 +10,7 @@ def showSignUp():
   return render_template('signup.html')
 
 @app.route('/signUp',methods=['POST'])
-def signUp();
+def signUp():
   _name = request.form['inputName']
   _email = request.form['inputEmail']
   _password = request.form['inputPassword']
