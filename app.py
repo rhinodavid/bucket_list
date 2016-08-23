@@ -126,9 +126,9 @@ def getWish():
     if session.get('user'):
       _user = session.get('user')
 
-      conn = mysq.connect()
+      conn = mysql.connect()
       cursor = conn.cursor()
-      cursor.callproc('sp_GetWishByUser',(_user))
+      cursor.callproc('sp_GetWishByUser',(_user,))
       wishes = cursor.fetchall()
 
       wishes_dict = []
