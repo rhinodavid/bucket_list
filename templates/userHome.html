@@ -12,11 +12,32 @@
     <link href="../static/userHome.css" rel="stylesheet">
     <script src="../static/js/jquery-3.1.0.min.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 
 </head>
 
 <body>
+<script>
+     var Edit = function(elm) {
+        $.ajax({
+            url: '/getWishById',
+            data: {
+                id: $(elm).attr('data-id')
+            },
+            type: 'POST',
+            success: function(res) {
+                var data = JSON.parse(res);
+                $('#editTitle').val(data[0]['Title']);
+                $('#editDescription').val(data[0]['Description']);
+                $('#editModal').modal();
+            },
+            error: function(error) {
+                console.log(error)
+            }
+        });
+    };
+</script>
 
     <div class="container">
         <div class="header">
@@ -38,11 +59,8 @@
                     </label>
                 </div>
                 <div class="pull-right action-buttons">
-                    <a data-id=${Id} onClick="Edit(this)">
+                    <a data-id=${Id} onclick="Edit(this)">
                         <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    <a data-id=${Id} onClick="ConfirmDelete(this)">
-                        <span class="glyphicon glyphicon-trash"></span>
                     </a>
                 </div>
             </li>
@@ -59,6 +77,33 @@
             </div>
         </div>
 
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title" id="editModalLabel">Update Wish</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form">
+                            <div class="form-group">
+                                <label for="recipient-name" class="control-label">Title:</label>
+                                <input type="text" class="form-control" id="editTitle">
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="control-label">Description:</label>
+                                <textarea class="form-control" id="editDescription"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnUpdate" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <footer class="footer">
             <p>&copy; RhinoDavid 2016</p>
