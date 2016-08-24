@@ -140,7 +140,7 @@ def getWish():
           'Date': wish[4]
         }
         wishes_dict.append(wish_dict)
-        return json.dumps(wishes_dict)
+      return json.dumps(wishes_dict)
     else:
       return render_template('error.html',error = 'Unauthorized Access')
   except Exception as e:
