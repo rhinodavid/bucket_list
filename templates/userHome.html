@@ -9,7 +9,9 @@
 
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
     <link href="../static/signup.css" rel="stylesheet">
+    <link href="../static/userHome.css" rel="stylesheet">
     <script src="../static/js/jquery-3.1.0.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
 
 
 </head>
@@ -28,9 +30,33 @@
             <h3 class="text-muted">Python Flask App</h3>
         </div>
 
-        <div class="jumbotron">
-            <h1>Welcome Home !!</h1>
+        <script id="listTemplate" type="text/x-jQuery-tmpl">
+            <li class="list-group-item">
+                <div class="checkbox">
+                    <label>
+                        ${Title}
+                    </label>
+                </div>
+                <div class="pull-right action-buttons">
+                    <a data-id=${Id} onClick="Edit(this)">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a data-id=${Id} onClick="ConfirmDelete(this)">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </div>
+            </li>
+        </script>
 
+        </script>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel-body">
+                    <ul id="ulist" class="list-group">
+                    </ul>
+                </div>
+            </div>
         </div>
 
 
@@ -46,23 +72,8 @@
             url: '/getWish',
             type: 'GET',
             success: function(res) {
-                var div = $('<div>')
-                        .attr('class', 'list-group')
-                        .append($('<a>')
-                            .attr('class', 'list-group-item active')
-                            .append($('<h4>')
-                                .attr('class', 'list-group-item-heading'),
-                                $('<p>')
-                                .attr('class', 'list-group-item-text')));
                 var wishObj = JSON.parse(res);
-                console.dir(res);
-                var wish = '';
-                $.each(wishObj, function(index, value) {
-                    wish = $(div).clone();
-                    $(wish).find('h4').text(value.Title);
-                    $(wish).find('p').text(value.Description);
-                    $('.jumbotron').append(wish);
-                });
+                $('#listTemplate').tmpl(wishObj).appendTo('#ulist');
             },
             error: function(error) {
                 console.log(error);
