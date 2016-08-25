@@ -19,25 +19,7 @@
 
 <body>
 <script>
-     var Edit = function(elm) {
-        localStorage.setItem('editId', $(elm).attr('data-id'));
-        $.ajax({
-            url: '/getWishById',
-            data: {
-                id: $(elm).attr('data-id')
-            },
-            type: 'POST',
-            success: function(res) {
-                var data = JSON.parse(res);
-                $('#editTitle').val(data[0]['Title']);
-                $('#editDescription').val(data[0]['Description']);
-                $('#editModal').modal();
-            },
-            error: function(error) {
-                console.log(error)
-            }
-        });
-    };
+
 </script>
 
     <div class="container">
@@ -65,8 +47,6 @@
                     </a>
                 </div>
             </li>
-        </script>
-
         </script>
 
         <div class="row">
@@ -114,18 +94,43 @@
 </body>
 <script>
     $(function(){
-        $.ajax({
-            url: '/getWish',
-            type: 'GET',
-            success: function(res) {
-                var wishObj = JSON.parse(res);
-                $('#listTemplate').tmpl(wishObj).appendTo('#ulist');
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
 
+         var Edit = function(elm) {
+            localStorage.setItem('editId', $(elm).attr('data-id'));
+            $.ajax({
+                url: '/getWishById',
+                data: {
+                    id: $(elm).attr('data-id')
+                },
+                type: 'POST',
+                success: function(res) {
+                    var data = JSON.parse(res);
+                    $('#editTitle').val(data[0]['Title']);
+                    $('#editDescription').val(data[0]['Description']);
+                    $('#editModal').modal();
+                },
+                error: function(error) {
+                    console.log(error)
+                }
+            });
+        };
+
+
+        var GetWishes = function(){
+            $.ajax({
+                url: '/getWish',
+                type: 'GET',
+                success: function(res) {
+                    var wishObj = JSON.parse(res);
+                    $('#listTemplate').tmpl(wishObj).appendTo('#ulist');
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        };
+
+        /// click handler setup ///
         $('#btnUpdate').click(function(){
             $.ajax({
                 url: '/updateWish',
@@ -138,6 +143,7 @@
                 success: function(res){
                     $('#editModal').modal('hide');
                     // re populate grid
+                    GetWishes();
                 },
                 error: function(error){
                     console.log(error);
