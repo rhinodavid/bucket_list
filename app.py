@@ -168,6 +168,30 @@ def getWishById():
     cursor.close()
     conn.close()
 
+@app.route('/updateWish',methods=['POST'])
+def updateWish():
+  try:
+    if session.get('user')
+      _user = session.get('user')
+      _title = request.form['title']
+      _description = request.form['description']
+      _wish_id = request.form['id']
+
+      conn = mysql.connect()
+      cursor = conn.cursor()
+      cursor.callproc('sp_updateWish',(_title,_description,_wish_id,_user))
+      data = cursor.fetchall()
+
+      if len(data) is 0:
+        conn.commit()
+        return json.dumps({'status':'OK'})
+      else:
+        return json.dumps({'status':'ERROR'})
+  except Exception as e:
+    return json.dumps({'status':'Unauthorized access'})
+  finally:
+    cursor.close()
+    conn.close()
 
 
 if __name__ == "__main__":
