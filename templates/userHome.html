@@ -4,15 +4,17 @@
 <head>
     <title>Python Flask Bucket List App</title>
 
-
-    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
     <link href="../static/signup.css" rel="stylesheet">
     <link href="../static/userHome.css" rel="stylesheet">
     <script src="../static/js/jquery-3.1.0.min.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
+    </script>
 
 
 </head>
@@ -93,42 +95,43 @@
     </div>
 </body>
 <script>
+
+     function Edit(elm) {
+        localStorage.setItem('editId', $(elm).attr('data-id'));
+        $.ajax({
+            url: '/getWishById',
+            data: {
+                id: $(elm).attr('data-id')
+            },
+            type: 'POST',
+            success: function(res) {
+                console.log(res);
+                var data = JSON.parse(res);
+                $('#editTitle').val(data[0]['Title']);
+                $('#editDescription').val(data[0]['Description']);
+                $('#editModal').modal({'show':true, backdrop:'false'});
+            },
+            error: function(error) {
+                console.log(error)
+            }
+        });
+     };
+
+    function GetWishes() {
+        $.ajax({
+            url: '/getWish',
+            type: 'GET',
+            success: function(res) {
+                var wishObj = JSON.parse(res);
+                $('#listTemplate').tmpl(wishObj).appendTo('#ulist');
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    }
+
     $(function(){
-
-         var Edit = function(elm) {
-            localStorage.setItem('editId', $(elm).attr('data-id'));
-            $.ajax({
-                url: '/getWishById',
-                data: {
-                    id: $(elm).attr('data-id')
-                },
-                type: 'POST',
-                success: function(res) {
-                    var data = JSON.parse(res);
-                    $('#editTitle').val(data[0]['Title']);
-                    $('#editDescription').val(data[0]['Description']);
-                    $('#editModal').modal();
-                },
-                error: function(error) {
-                    console.log(error)
-                }
-            });
-        };
-
-
-        var GetWishes = function(){
-            $.ajax({
-                url: '/getWish',
-                type: 'GET',
-                success: function(res) {
-                    var wishObj = JSON.parse(res);
-                    $('#listTemplate').tmpl(wishObj).appendTo('#ulist');
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        };
 
         /// click handler setup ///
         $('#btnUpdate').click(function(){
@@ -150,6 +153,9 @@
                 }
             });
         });
+
+        // Load inital data
+        GetWishes();
     });
 </script>
 
