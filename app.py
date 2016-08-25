@@ -171,7 +171,7 @@ def getWishById():
 @app.route('/updateWish',methods=['POST'])
 def updateWish():
   try:
-    if session.get('user')
+    if session.get('user'):
       _user = session.get('user')
       _title = request.form['title']
       _description = request.form['description']
