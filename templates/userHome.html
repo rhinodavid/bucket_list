@@ -20,6 +20,7 @@
 <body>
 <script>
      var Edit = function(elm) {
+        localStorage.setItem('editId', $(elm).attr('data-id'));
         $.ajax({
             url: '/getWishById',
             data: {
@@ -123,6 +124,25 @@
             error: function(error) {
                 console.log(error);
             }
+        });
+
+        $('#btnUpdate').click(function(){
+            $.ajax({
+                url: '/updateWish',
+                data: {
+                    title: $('#editTitle').val(),
+                    description: $('#editDescription').val(),
+                    id: localStorage.getItem('editId')
+                },
+                type: 'POST',
+                success: function(res){
+                    $('#editModal').modal('hide');
+                    // re populate grid
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
         });
     });
 </script>
