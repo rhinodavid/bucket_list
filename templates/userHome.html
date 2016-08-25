@@ -123,6 +123,7 @@
             type: 'GET',
             success: function(res) {
                 var wishObj = JSON.parse(res);
+                $('#ulist').empty();
                 $('#listTemplate').tmpl(wishObj).appendTo('#ulist');
             },
             error: function(error) {
