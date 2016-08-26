@@ -114,6 +114,8 @@ def addWish():
         return redirect('/userHome')
       else:
         return render_template('error.html',error = "There was a problem adding the wish")
+    else:
+      return render_template('error.html',error = 'There was an error with your wish.')
   except Exception as e:
     return render_template('error.html',error = str(e))
   finally:
