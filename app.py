@@ -165,6 +165,9 @@ def getWish():
       return render_template('error.html',error = 'Unauthorized Access')
   except Exception as e:
     return render_template('error.html',error = str(e))
+  finally:
+    cursor.close()
+    conn.close()
 
 @app.route('/getWishById',methods=['POST'])
 def getWishById():
