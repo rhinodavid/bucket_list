@@ -211,7 +211,7 @@ def deleteWish():
       else:
         return json.dumps({'status':'An error has occured'})
     else:
-      return json.dumps({'error.html',error = 'Unauthorized access'})
+      return render_template('error.html',error = 'Unauthorized access')
   except Exception as e:
     return json.dumps({'status':str(e)})
   finally:
