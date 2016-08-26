@@ -14,6 +14,12 @@ app.config['MYSQL_DATABASE_DB'] = 'BucketList'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
+### CONFIGURATION ###
+pageLimit = 2
+
+
+
+### ROUTING ###
 @app.route("/")
 def main():
   return render_template('index.html')
@@ -122,15 +128,18 @@ def addWish():
     cursor.close()
     conn.close()
 
-@app.route('/getWish')
+@app.route('/getWish',methods=['POST'])
 def getWish():
   try:
     if session.get('user'):
       _user = session.get('user')
 
+      _limit = pageLimit
+      _offset = request.form['offset']
+
       conn = mysql.connect()
       cursor = conn.cursor()
-      cursor.callproc('sp_GetWishByUser',(_user,))
+      cursor.callproc('sp_GetWishByUser',(_user,_limit,_offset))
       wishes = cursor.fetchall()
 
       wishes_dict = []
