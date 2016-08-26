@@ -103,7 +103,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Delete</button>
+                        <button type="button" class="btn btn-primary" onclick="Delete()">Delete</button>
                     </div>
                 </div>
             </div>
@@ -156,6 +156,28 @@
     function ConfirmDelete(elm) {
         localStorage.setItem('deleteId', $(elm).attr('data-id'));
         $('#deleteModal').modal();
+    }
+
+    function Delete() {
+        $.ajax({
+            url: '/deleteWish',
+            data: {
+                id: localStorage.getItem('deleteId')
+            },
+            type: 'POST',
+            success: function(res) {
+                var result = JSON.parse(res);
+                if (result.status == 'OK') {
+                    $('#deleteModal').modal('hide');
+                    GetWishes();
+                } else {
+                    alert(result.status);
+                }
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
     }
 
     $(function(){
