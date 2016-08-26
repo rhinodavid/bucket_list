@@ -159,7 +159,7 @@ def getWish():
         }
         wishes_dict.append(wish_dict)
       response.append(wishes_dict)
-      response.append({'total':outParam[0][0]})
+      response.append({'total':outParam[0][0], 'pageLimit':pageLimit})
       return json.dumps(response)
     else:
       return render_template('error.html',error = 'Unauthorized Access')
