@@ -135,7 +135,6 @@ def getWish():
       _user = session.get('user')
       _limit = pageLimit
       _offset = request.form['offset']
-      print _offset
       _total_records = 0
 
       conn = mysql.connect()
@@ -162,9 +161,9 @@ def getWish():
       response.append({'total':outParam[0][0], 'pageLimit':pageLimit})
       return json.dumps(response)
     else:
-      return render_template('error.html',error = 'Unauthorized Access')
+      return json.dumps({'status':'ERROR'})
   except Exception as e:
-    return render_template('error.html',error = str(e))
+    return json.dumps({'status':'Unauthorized access'})
   finally:
     cursor.close()
     conn.close()
