@@ -1,6 +1,9 @@
 from flask import Flask, render_template, json, request, redirect, session
 from flaskext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
+from werkzeug.wsgi import LimitedStream
+import uuid
+import os
 
 app = Flask(__name__)
 app.secret_key = 'P)99(uvtehdG7AZj{q3['
@@ -109,11 +112,26 @@ def addWish():
     _wish_title = request.form['inputTitle']
     _wish_description = request.form['inputDescription']
 
+    if request.form.get('filePath') is None:
+      _filePath = ''
+    else:
+      _filePath = request.form.get('filePath')
+
+    if request.form.get('private') is None:
+      _private = 0
+    else:
+      _private = 1
+
+    if request.form.get('done') is None:
+      _done = 0
+    else:
+      _done = 1
+
     conn = mysql.connect()
     cursor = conn.cursor()
 
     if _user_id and _wish_title and _wish_description:
-      cursor.callproc('sp_addWish',(_wish_title,_wish_description,_user_id))
+      cursor.callproc('sp_addWish',(_wish_title,_wish_description,_user_id,_filePath,_private,_done))
       data = cursor.fetchall()
       if len(data) is 0:
         conn.commit()
@@ -240,6 +258,15 @@ def deleteWish():
     cursor.close()
     conn.close()
 
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+  if request.method == 'POST':
+    file = request.files['file']
+    extension = os.path.splitext(file.filename)[1]
+    f_name = str(uuid.uuid4()) + extension
+    app.config['UPLOAD_FOLDER'] = 'static/Uploads'
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+    return json.dumps({'filename': f_name})
 
 
 if __name__ == "__main__":

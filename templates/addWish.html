@@ -81,19 +81,23 @@
                                     Browse&hellip; <input type="file" id="fileupload" name="file" multiple>
                                 </span>
                             </span>
+                            <div class="pull-right">
+                                <img id="imgUpload" style="width: 140px; height: 140px;" class="img-thumbnail">
+                                <input type="hidden" name="filePath" id="filePath" />
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Mark this as private and not visible to others.</label>
                         <br />
-                        <input type="checkbox"> Mark as Private <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                        <input name="private" type="checkbox"> Mark as Private <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
                     </div>
 
                     <div class="form-group">
                         <label>Have you already accomplished this?</label>
                         <br />
-                        <input type="checkbox"> Mark as Done <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        <input name="done" type="checkbox"> Mark as Done <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                     </div>
 
                     <!-- Button -->
@@ -102,6 +106,8 @@
                             <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Publish" />
                         </p>
                     </div>
+
+                    <input type="hidden" name="filePath" id="filePath" />
 
             </form>
 
@@ -119,7 +125,9 @@
                         data.submit();
                     },
                     success: function(response, status) {
-                        console.log(response);
+                        var filePath = 'static/Uploads/' + response.filename;
+                        $('#imgUpload').attr('src',filePath);
+                        $('#filePath').val(filePath);
                     },
                     error: function(error) {
                         console.log(error);
